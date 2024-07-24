@@ -93,10 +93,22 @@
 		if (iAmUpdating) {
 			iAmUpdating = false;
 			return;
-		} else if (content !== payload.new.content) {
-			console.log('updating from remote');
+		}
+
+		if (payload.errors) {
+			console.log('Payload has errors', payload);
+			return;
+		}
+
+		if (payload.new.content && content !== payload.new.content) {
+			console.log('updating from remote', payload);
 			content = payload.new.content;
 			prevContent = content;
+		}
+
+		if (payload.new.image_data && imageData !== payload.new.image_data) {
+			console.log('updating image from remote', payload);
+			imageData = payload.new.image_data;
 		}
 	}
 
