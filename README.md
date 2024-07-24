@@ -31,4 +31,5 @@ Row level security:
 - [x] Make it real-time update
 - [x] Publish it
 - [x] Ability to create new ones
-- [ ] Add support for images
+- [x] Add support for images
+- [x] Filter

@@ -42,13 +42,11 @@
 
 	function startListening() {
 		console.log('Start listening');
-		//Start listening
-		//todo add filter here
 		channel = supabase
 			.channel('schema-db-changes')
 			.on(
 				'postgres_changes',
-				{ event: 'UPDATE', schema: 'public', table: 'clipboard' },
+				{ event: 'UPDATE', schema: 'public', table: 'clipboard', filter: `name=eq.${clipboardId}` },
 				handleUpdate
 			)
 			.subscribe();
