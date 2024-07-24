@@ -195,6 +195,8 @@
 		<div class="flex justify-center">
 			{#if imageData}
 				<img class="border-2" src={imageData} alt="parsed content" />
+			{:else}
+				No image. Paste an image to add.
 			{/if}
 		</div>
 	{:else}
