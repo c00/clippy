@@ -1,9 +1,9 @@
 # Clipboard
 
-Remote clipboard. Live sharing enabled I guess?
+Remote clipboard.
 
 ```bash
-npx supabase gen types typescript --project-id vmtkqlghfrbjcpwlepel > src/lib/model/database.types.ts
+npx supabase gen types typescript --project-id vmtkqlghfrbjcpwlepel > src/lib/database.types.ts
 ```
 
 ## todos
@@ -12,6 +12,7 @@ npx supabase gen types typescript --project-id vmtkqlghfrbjcpwlepel > src/lib/mo
 - [x] Make it save stuff
 - [x] Make it get stuff
 - [x] Add url to it.
-- [ ] Make it real-time update
-- [ ] Publish it
-- [ ] Add redirect uri?
+- [x] Make it real-time update
+- [x] Publish it
+- [x] Ability to create new ones
+- [ ] Add support for images

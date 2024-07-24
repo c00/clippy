@@ -1,32 +1,27 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { onMount } from 'svelte';
+	import type { RealtimeChannel } from '@supabase/supabase-js';
+	import { onDestroy, onMount } from 'svelte';
+	import { session } from '../../../lib/auth/SessionStore';
 	import { supabase } from '../../../lib/auth/SupabaseClient';
 
 	let clipboardId: string;
 	let content = '';
 	let iAmUpdating = false;
+	/** Does the clipboard already exist? */
+	let existingClipboard = false;
+	let channel: RealtimeChannel | undefined;
 
 	onMount(() => {
 		clipboardId = $page.params.id;
-		getData();
-
-		//Start listening
-		const sub = supabase
-			.channel('schema-db-changes')
-			.on(
-				'postgres_changes',
-				{ event: 'UPDATE', schema: 'public', table: 'clipboard' },
-				handleUpdate
-			)
-			.subscribe();
-
-		return () => {
-			sub.unsubscribe();
-		};
+		getClipboard();
 	});
 
-	async function getData() {
+	onDestroy(() => {
+		if (channel) channel.unsubscribe();
+	});
+
+	async function getClipboard() {
 		const row = await supabase
 			.from('clipboard')
 			.select('name, content')
@@ -34,22 +29,56 @@
 			.single();
 
 		if (row.data) {
-			content = row.data?.content;
+			content = row.data.content;
+			existingClipboard = true;
+			startListening();
 		}
 	}
 
-	let debounceId: ReturnType<typeof setTimeout>;
+	function startListening() {
+		console.log('Start listening');
+		//Start listening
+		//todo add filter here
+		channel = supabase
+			.channel('schema-db-changes')
+			.on(
+				'postgres_changes',
+				{ event: 'UPDATE', schema: 'public', table: 'clipboard' },
+				handleUpdate
+			)
+			.subscribe();
+	}
 
+	let debounceId: ReturnType<typeof setTimeout>;
 	async function storeData() {
 		clearTimeout(debounceId);
 
 		debounceId = setTimeout(async () => {
 			iAmUpdating = true;
+
+			if (!existingClipboard) {
+				createClipboard();
+				return;
+			}
 			await supabase.from('clipboard').update({ content: content }).eq('name', clipboardId);
 		}, 300);
 	}
 
+	async function createClipboard() {
+		const response = await supabase.from('clipboard').insert({
+			name: clipboardId,
+			user_id: $session?.user.id || '',
+			content: content
+		});
+
+		if (!response.error) {
+			existingClipboard = true;
+			getClipboard();
+		}
+	}
+
 	function handleUpdate(payload: any) {
+		console.log('updating', payload);
 		if (iAmUpdating) {
 			iAmUpdating = false;
 			return;

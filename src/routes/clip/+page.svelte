@@ -3,8 +3,6 @@
 	import { customAlphabet } from 'nanoid';
 	import { onMount } from 'svelte';
 
-	const nanoid = customAlphabet('abcdefghijkmnpqrstuvwxyz23456789');
-
 	onMount(() => {
 		const nanoid = customAlphabet('abcdefghijkmnpqrstuvwxyz23456789');
 		goto(`/clip/${nanoid(6)}`);

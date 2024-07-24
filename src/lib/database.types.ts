@@ -50,31 +50,23 @@ export type Database = {
           created_at: string
           id: number
           name: string
-          organization_id: number
+          user_id: string
         }
         Insert: {
           content: string
           created_at?: string
           id?: number
           name: string
-          organization_id: number
+          user_id: string
         }
         Update: {
           content?: string
           created_at?: string
           id?: number
           name?: string
-          organization_id?: number
+          user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "clipboard_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "organization"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       image: {
         Row: {
