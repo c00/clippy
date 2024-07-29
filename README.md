@@ -24,12 +24,4 @@ Row level security:
 
 ## todos
 
-- [x] copy / paste button
-- [x] Make it save stuff
-- [x] Make it get stuff
-- [x] Add url to it.
-- [x] Make it real-time update
-- [x] Publish it
-- [x] Ability to create new ones
-- [x] Add support for images
-- [x] Filter
+- [ ] Add file support
